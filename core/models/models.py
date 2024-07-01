@@ -17,6 +17,7 @@ class Bike(Base):
     type = Column(String)
     notes = Column(String)
     year = Column(String)
+    maintenance_records = relationship("MaintenanceRecord", back_populates="bike")
     created_on = Column(DateTime(timezone=True), server_default=FetchedValue())
     modified_on = Column(DateTime(timezone=True), server_default=FetchedValue())
 
@@ -33,16 +34,17 @@ class User(Base):
     created_on = Column(DateTime(timezone=True), server_default=FetchedValue())
     modified_on = Column(DateTime(timezone=True), server_default=FetchedValue())
     bikes = relationship("Bike", back_populates="owner")
+    password = Column(String)
 
 
-# class MaintenanceRecord(Base):
-#     __tablename__ = "maintenance_record"
-#
-#     id = Column(Integer, primary_key=True, index=True)
-#     bike_id = Column(Integer, ForeignKey("bike.id"))
-#     bike = relationship("Bike", back_populates="maintenance_records")
-#     description = Column(String)
-#     date = Column(String)
-#     notes = Column(String)
-#     created_on = Column(String)
-#     modified_on = Column(String)
+class MaintenanceRecord(Base):
+    __tablename__ = "maintenance_record"
+
+    id = Column(Integer, primary_key=True, index=True)
+    bike_id = Column(Integer, ForeignKey("bike.id"))
+    bike = relationship("Bike", back_populates="maintenance_records")
+    description = Column(String)
+    date = Column(String)
+    notes = Column(String)
+    created_on = Column(String)
+    modified_on = Column(String)

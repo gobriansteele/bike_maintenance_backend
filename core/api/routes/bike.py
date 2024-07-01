@@ -1,15 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from core.models import crud
 from core.schemas import schema
 from core.api.deps import SessionDep
+from core.api.routes.user import get_current_user
 
 
 router = APIRouter()
 
 
 @router.get("/", response_model=list[schema.Bike])
-def read_bikes(db: SessionDep, skip: int = 0, limit: int = 10 ):
-    bikes = crud.get_bikes(db, skip=skip, limit=limit)
+def read_bikes(db: SessionDep, skip: int = 0, limit: int = 10, current_user: schema.User = Depends(get_current_user)):
+    bikes = crud.get_bikes(db, skip=skip, limit=limit, user_id=current_user.id)
     return bikes
 
 
