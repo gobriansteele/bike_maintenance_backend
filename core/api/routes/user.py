@@ -3,10 +3,9 @@ from typing import Annotated
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 
 from core.services import login
-from core.models import crud, models
+from core.models import crud
 from core.schemas import schema
 from core.api.deps import SessionDep
 
@@ -52,6 +51,7 @@ async def get_current_user(db: SessionDep, token: Annotated[str, Depends(oauth2_
         payload = jwt.decode(token, login_service.SECRET_KEY, algorithms=[login_service.ALGORITHM])
         username: str = payload.get("sub")
         id: int = payload.get("id")
+        print('here again')
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username, id=id)
