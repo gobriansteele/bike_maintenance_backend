@@ -41,7 +41,6 @@ class TokenData(BaseModel):
 
 async def get_current_user(db: SessionDep, token: Annotated[str, Depends(oauth2_scheme)]):
     login_service = login.LoginService(db)
-    print("HERE")
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -51,7 +50,6 @@ async def get_current_user(db: SessionDep, token: Annotated[str, Depends(oauth2_
         payload = jwt.decode(token, login_service.SECRET_KEY, algorithms=[login_service.ALGORITHM])
         username: str = payload.get("sub")
         id: int = payload.get("id")
-        print('here again')
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username, id=id)

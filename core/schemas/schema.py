@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Union, List
 from datetime import datetime
+from typing_extensions import Generic, TypeVar
 
 
 class BikeBase(BaseModel):
@@ -68,4 +69,19 @@ class MaintenanceRecordBase(BaseModel):
     notes: str
     created_on: datetime
     modified_on: Union[datetime, None]
+
+
+T = TypeVar('T')
+
+
+class ResultList(Generic[T]):
+    def __init__(self, items: list[T], count: int ) -> None:
+        super().__init__()
+        self.results: list[T] = items
+        self.count: int = count
+
+    results: List[T]
+    count: int
+    next: str | None = None
+    previous: str | None = None
 

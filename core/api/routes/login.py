@@ -65,8 +65,7 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Sessio
 
 @router.post("/update-password", response_model=schema.User)
 def update_password(db: SessionDep, pw_update: schema.UserUpdatePassword):
-    print(pw_update.email, pw_update.old_password, pw_update.new_password)
-    # if not authenticate_user(pw_update.email, pw_update.old_password, db):
-    #     raise HTTPException(status_code=400, detail="Incorrect password")
+    if not authenticate_user(pw_update.email, pw_update.old_password, db):
+        raise HTTPException(status_code=401, detail="Incorrect password")
     hashed_pw = get_password_hash(pw_update.new_password)
     return crud.update_password(db, pw_update.email, hashed_pw)

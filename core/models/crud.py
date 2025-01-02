@@ -5,10 +5,7 @@ from .models import Bike, User
 
 
 def get_bikes(db: Session, skip: int = 0, limit: int = 10, user_id: int = None):
-    print(db.info)
-    the_bikes = db.query(Bike).filter(Bike.owner_id == user_id).offset(skip).limit(limit).all()
-    print(the_bikes)
-    return the_bikes
+    return db.query(Bike).filter(Bike.owner_id == user_id).offset(skip).limit(limit).all()
 
 
 def get_bike(db: Session, bike_id: int):

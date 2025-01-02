@@ -3,15 +3,15 @@ from core.models import crud
 from core.schemas import schema
 from core.api.deps import SessionDep
 from core.api.routes.user import get_current_user
-
+from core.schemas.schema import ResultList
 
 router = APIRouter()
 
 
-@router.get("/", response_model=list[schema.Bike])
-def read_bikes(db: SessionDep, skip: int = 0, limit: int = 10, current_user: schema.User = Depends(get_current_user)):
+@router.get("/", response_model=None)
+def read_bikes(db: SessionDep, skip: int = 0, limit: int = 10, current_user: schema.User = Depends(get_current_user)) -> ResultList[schema.Bike]:
     bikes = crud.get_bikes(db, skip=skip, limit=limit, user_id=current_user.id)
-    return bikes
+    return schema.ResultList(bikes, len(bikes))
 
 
 @router.get("/{bike_id}", response_model=schema.Bike)
